@@ -1,6 +1,11 @@
 # ry-Speech-commands
-all the 4 speech sub-datasets
 
+(2018) Speech commands dataset version 2. 
+http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz
+
+
+split & merge into 4 sub-datasets
+### --------
 1.
 spCmdV002_train.gz
 
@@ -18,6 +23,9 @@ https://1drv.ms/u/s!AjlltK85sd7qvMheRTIrRTLM7-BSOg?e=pabbFJ
 
 https://1drv.ms/u/s!AjlltK85sd7qvMhgtlxzMfKzKnEpqA?e=cY6uGO
 
+### --------
+
+the following is a sample model for recognition immediately
 5. ry_best_model.hdf5
 
 https://1drv.ms/u/s!AjlltK85sd7qq6wbViiNAUzhysNt5Q?e=c5AZRK
