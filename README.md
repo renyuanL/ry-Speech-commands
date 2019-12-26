@@ -1,5 +1,10 @@
 # ry-Speech-commands
 
+major reference:
+Speech Commands: A Dataset for Limited-Vocabulary Speech Recognition
+https://www.researchgate.net/publication/324435399_Speech_Commands_A_Dataset_for_Limited-Vocabulary_Speech_Recognition
+
+
 (2018) Speech commands dataset version 2. 
 http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz
 
