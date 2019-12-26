@@ -1,7 +1,12 @@
 # ry-Speech-commands
 
+Refs:
+1. Small-footprint Keyword Spotting 
+https://static.googleusercontent.com/media/research.google.com/zh-TW//pubs/archive/43969.pdf
+
+
 major reference:
-Speech Commands: A Dataset for Limited-Vocabulary Speech Recognition
+0. Speech Commands: A Dataset for Limited-Vocabulary Speech Recognition
 https://www.researchgate.net/publication/324435399_Speech_Commands_A_Dataset_for_Limited-Vocabulary_Speech_Recognition
 
 
@@ -9,6 +14,7 @@ https://www.researchgate.net/publication/324435399_Speech_Commands_A_Dataset_for
 http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz
 
 
+Ry Tasks:
 split & merge into 4 sub-datasets
 ### --------
 1.
