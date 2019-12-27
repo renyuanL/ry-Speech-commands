@@ -25,6 +25,8 @@ http://download.tensorflow.org/data/speech_commands_v0.02.tar.gz
 1. Small-footprint Keyword Spotting 
 https://static.googleusercontent.com/media/research.google.com/zh-TW//pubs/archive/43969.pdf
 
+2. A very good introduction
+https://www.analyticsvidhya.com/blog/2019/07/learn-build-first-speech-to-text-model-python/
 
 
 #### Ry Tasks:
