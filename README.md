@@ -29,14 +29,5 @@ https://static.googleusercontent.com/media/research.google.com/zh-TW//pubs/archi
 https://www.analyticsvidhya.com/blog/2019/07/learn-build-first-speech-to-text-model-python/
 
 
-#### Ry Tasks:
-
-the major database was split & merged into 4 sub-datasets
-
-- 1. spCmdV002_train.gz
-- 2. spCmdV002_val.gz
-- 3. spCmdV002_test.gz
-- 4. spCmdV002_testREAL.gz
-- 5. ry_best_model.hdf5
 
 
