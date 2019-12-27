@@ -5,11 +5,11 @@ C:>python ryLab001.py
 ### 
 This program will generate the following files and save in the local disk
 
-sd_GSCmdV2/            9,538,693,920 位元組
-google_spcmd_train.gz  2,802,310,705 位元組
-google_spcmd_test.gz     472,778,690 位元組
-ry_best_model.hdf5         2,302,776 位元組
-rySp_v2.gz                   327,735 位元組
+- sd_GSCmdV2/            9,538,693,920 位元組
+- google_spcmd_train.gz  2,802,310,705 位元組
+- google_spcmd_test.gz     472,778,690 位元組
+- ry_best_model.hdf5         2,302,776 位元組
+- rySp_v2.gz                   327,735 位元組
 
 ### major reference:
 
