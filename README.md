@@ -35,6 +35,10 @@ https://static.googleusercontent.com/media/research.google.com/zh-TW//pubs/archi
 3. A neural attention model for speech command recognition
 https://arxiv.org/abs/1808.08929
 
+4. Small-Footprint Keyword Spotting on Raw Audio Data with Sinc-Convolutions
+https://arxiv.org/abs/1911.02086
+
+
 
 
 
