@@ -32,7 +32,10 @@ GSCmdV2Categs = {'unknown' : 0, 'silence' : 0, '_unknown_' : 0, '_silence_' : 0,
                  'seven' : 19,  'eight' : 20, 'nine' : 1 }
 numGSCmdV2Categs = 21
 
-def PrepareGoogleSpeechCmd(version = 2, forceDownload = False, task = '20cmd'):
+def PrepareGoogleSpeechCmd(version= 2, 
+                           forceDownload= False, 
+                           task = '35word' #'20cmd'
+                          ):
     """
     Prepares Google Speech commands dataset version 2 for use
     

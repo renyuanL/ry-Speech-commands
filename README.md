@@ -38,6 +38,10 @@ https://arxiv.org/abs/1808.08929
 4. Small-Footprint Keyword Spotting on Raw Audio Data with Sinc-Convolutions
 https://arxiv.org/abs/1911.02086
 
+5. End-to-End Speech Recognition From the Raw Waveform
+https://arxiv.org/abs/1806.07098
+
+
 
 
 
