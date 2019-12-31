@@ -12,10 +12,14 @@ ryLab00.py
 
 # In[]
 import numpy as np
+import time
 
-fn= 'ryGsc_sil0.npz'
-print(".... z= np.load({}) ....".format(fn))
+fn= 'ryGsc_sil1.npz'
+fnModel= 'ry_best_model1.hdf5'
 
+print(".... z= np.load({}) will train into {}".format(fn, fnModel))
+
+t0= time.time()
 
 z= np.load(fn)
 
@@ -33,6 +37,12 @@ y_testREAL0= y_testREAL[y_testREAL==0]
     
 x_testREAL1= x_testREAL[y_testREAL!=0]
 y_testREAL1= y_testREAL[y_testREAL!=0]
+
+#t0= time.time()
+dt= time.time()- t0
+print('... z= np.load() ... dt(sec)= {:.3f}'.format(dt))
+
+## z= np.load() ... dt(sec)= 75.36865901947021
 
 # In[]
 import tensorflow as tf
@@ -146,10 +156,20 @@ def get_all_fearure(all_x, batch_size= 1000):
     return XL
 # In[]
 print('.... get_all_fearure() .... ')
+
+t0= time.time()
+
 X_testREAL= get_all_fearure(x_testREAL)
 X_test=     get_all_fearure(x_test)
 X_val=      get_all_fearure(x_val)
 X_train=    get_all_fearure(x_train)
+
+#t0= time.time()
+dt= time.time()- t0
+print('... get_all_fearure() ... dt(sec)= {:.3f}'.format(dt))
+
+### get_all_fearure() ... dt(sec)= 36.128026723861694
+### get_all_fearure() ... dt(sec)= 52.950
 
 
 # In[]
@@ -161,8 +181,12 @@ nTime, nFreq= (125, 128)
 '''
 
 # In[]
-def normalize(x):   
-    x= (x-x.mean())/x.std()
+def normalize(x, axis= None):   
+    if axis== None:
+        x= (x-x.mean())/x.std()
+    else:
+        x= (x-x.mean(axis= axis))/x.std(axis= axis)
+    
     return x
 
 # In[]
@@ -173,11 +197,12 @@ X_val=   X_val.reshape(-1, nTime, nFreq, 1).astype('float32')
 X_test=  X_test.reshape( -1, nTime, nFreq, 1).astype('float32') 
 X_testREAL=  X_testREAL.reshape( -1, nTime, nFreq, 1).astype('float32') 
 
-X_train=     normalize(X_train)
-X_val=       normalize(X_val)
-X_test=      normalize(X_test)
-X_testREAL=  normalize(X_testREAL)
-
+#'''  好像重複做了？！
+X_train=     normalize(X_train)#, axis=0)  # normalized for the all set, many utterence
+X_val=       normalize(X_val)#, axis=0)
+X_test=      normalize(X_test)#, axis=0)
+X_testREAL=  normalize(X_testREAL)#, axis=0)
+#'''
 
 # In[]
 
@@ -196,7 +221,13 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 # In[]
 
-nCategs= 36 #c_train.size #36
+
+
+
+
+
+# In[]
+nCategs= len(set(y_train)) #36 #c_train.size #36
 
 
 x= Input(shape= (nTime, nFreq, 1))
@@ -248,15 +279,19 @@ es= EarlyStopping(
         mode=      'min', 
         verbose=   1) 
 
-mc= ModelCheckpoint('ry_best_model.hdf5', 
+
+
+mc= ModelCheckpoint(fnModel, 
         monitor=    'val_accuracy', 
         verbose=    1, 
         save_best_only= True, 
         mode=      'max')
 
+t0= time.time()
+
 h= m.fit(X_train, y_train,
          
-        batch_size=1000,
+        batch_size=500, #1000, # 1000
         epochs=    100,
         
         callbacks=[es, mc],
@@ -264,6 +299,11 @@ h= m.fit(X_train, y_train,
         #validation_split= 0.1
         validation_data= (X_val, y_val)
         )
+
+
+#t0= time.time()
+dt= time.time()- t0
+print('... h= m.fit() ... dt(sec)= {}'.format(dt))
 
 # In[]
 import numpy as np
@@ -347,6 +387,14 @@ _='''
 408/1 - 0s - loss: 55.2395 - accuracy: 0.0000e+00 <<- testREAL01， 標記錯誤，沒辦法。
 
 '''
+
+_='''
+11005/1 - 1s - loss: 0.4802 - accuracy: 0.9045
+4074/1 - 1s - loss: 0.1799 - accuracy: 0.9050
+408/1 - 0s - loss: 0.5552 - accuracy: 0.9289
+408/1 - 0s - loss: 72.8791 - accuracy: 0.0000e+00
+ ~~~ simulation session ended ~~~
+'''
 # In[]
 
 
@@ -360,6 +408,9 @@ print(' ~~~ simulation session ended ~~~')
 import numpy as np
 from tensorflow.keras.models import load_model
 import sounddevice as sd
+
+import audioUtils
+
 
 labels= np.array([
         '_silence_', 
@@ -401,7 +452,7 @@ labels= np.array([
         dtype='<U11')
 
 
-model= load_model('ry_best_model.hdf5')
+model= load_model(fnModel)
 
 
 def predict(x):#, fs=16000):
@@ -417,7 +468,7 @@ def recWav(x, featureOut= False):
     
     X= X.numpy().astype(np.float32)
     
-    X= normalize(X)
+    X= normalize(X)  # normalized for only one utterence x
 
     Xin= X.reshape(1,X.shape[0],X.shape[1], 1)
     y= predict(Xin)
@@ -426,7 +477,249 @@ def recWav(x, featureOut= False):
         return y, X
     else:
         return y
+
+
 # In[]
+    
+#import numpy as np
+#from tensorflow.keras.models import load_model
+import sounddevice as sd
+
+import pylab as pl 
+from tqdm import tqdm
+
+print('testing x_testREAL1 directly from wavform .... ')
+
+n= 0
+nWrong= 0 
+wrongL= []
+
+infoL= []
+yL= []  
+for x, yI in tqdm(zip(x_testREAL1, y_testREAL1)): #xL[0:10]:
+    #x= x_testREAL[i]
+    
+    yAns= labels[yI]
+    
+    x= x.astype(np.float32)
+    
+    #sd.play(x, samplerate= 16000)
+        
+    y= recWav(x) #, featureOut=True) 
+    
+    yL += [y]
+    # the acc will be slightly different because of different normalization base
+    
+    #info= 'n= {:05d}, nWrong= {:05d}, y=【{}】, yAns= [{}]'.format(
+    #        n, nWrong, y, yAns)
+    #print(info)
+    
+    
+    if y != yAns:
+        nWrong += 1
+        wrongL += [n]
+        
+        info= '''n= {:05d}, nWrong= {:05d}, wer= {:.5f}, y=【{}】, yAns= [{}]'''.format(
+                 n, nWrong, nWrong/(n+1), y, yAns)
+        
+        #print(info)
+        
+        infoL += [info]
+        
+        
+        '''
+        sd.play(x, samplerate= 16000)
+        
+        pl.subplot(2,1,1)
+        
+        pl.title(info)
+
+        pl.imshow(X.transpose(), origin='low')
+        
+        pl.subplot(2,1,2)
+        pl.plot(x)
+        pl.grid('on')
+        pl.show()
+            
+        sd.wait()
+        '''
+    
+    n += 1
+    #break
+# In[]    
+info= '''n= {:05d}, nWrong= {:05d}, wer= {:.5f}, acc= {:.5f}'''.format(
+         n, nWrong, nWrong/n, 1-nWrong/n)
+
+infoL += [info]
+
+print(info)
+
+fnInfo= 'infoL_testREAL1.txt'
+#np.save(, np.array(infoL))
+with open(fnInfo,'w') as fp:
+    for info in infoL:
+        print(info, file= fp)
+
+
+_='''
+3966it [02:26, 27.78it/s]n= 03968, nWrong= 00433, wer= 0.10910, y=【two】, yAns= [yes]
+4074it [02:30, 27.14it/s]
+
+433/4074
+Out[24]: 0.10628375061364752  <--wer for x_testREAL1
+
+'''
+
+_='''
+405it [00:17, 17.49it/s]n= 00405, nWrong= 00119, wer= 0.29310, y=【zero】, yAns= [_silence_]
+n= 00406, nWrong= 00120, wer= 0.29484, y=【six】, yAns= [_silence_]
+
+【408】it [00:17, 19.53it/s]n= 00408, nWrong= 00121, 【wer= 0.29584】, y=【backward】, yAns= [_silence_]
+ <-- wer for x_testREAL0 其中 408 個 真正 的 silence
+ 
+#-----
+
+n= 00815, nWrong= 00528, wer= 0.64706, y=【zero】, yAns= [_silence_]
+816it [00:33, 24.65it/s]
+
+528/816
+Out[26]: 0.6470588235294118
+
+(528-408)/(816-408)
+Out[27]: 0.29411764705882354  <-- wer for x_testREAL0 其中 408 個 真正 的 silence
+
+'''
+
+# In[]
+'''
+infoL= np.load('infoL_testREAL.npy')
+wrongL= [int(infoL[i].split()[1].strip(',')) for i in range(infoL.size)]
+
+for info in infoL[::-1]:
+    
+    i= int(info.split()[1].strip(','))
+    x= x_testREAL[i]
+    
+    x= x.astype(np.float32)
+    
+    sd.play(x, samplerate= 16000)
+        
+
+    print(info)
+            
+    pl.title(info)
+
+    pl.plot(x)
+    pl.grid('on')
+    pl.show()
+        
+    sd.wait()
+'''
+    
+    
+# In[]
+
+
+from sklearn.metrics import confusion_matrix
+import audioUtils
+
+
+#35word, v2
+'''
+classList= ['_silence_', 'nine', 'yes', 'no', 'up', 'down', 'left', 'right', 'on', 'off', 'stop', 'go',
+           'zero', 'one', 'two', 'three', 'four', 'five', 'six', 
+           'seven',  'eight', 'backward', 'bed', 'bird', 'cat', 'dog',
+           'follow', 'forward', 'happy', 'house', 'learn', 'marvin', 'sheila', 'tree',
+           'visual', 'wow']
+'''
+
+classList= labels.tolist()
+
+
+
+
+classDic= dict([(c, n) for n, c in enumerate(classList)]) 
+classDic# In[]
+
+#y_test= np.array([classDic[x] for x in y_testREAL])
+
+y_pred= np.array([classDic[x] for x in yL])
+
+cm_testREAL1 = confusion_matrix(y_testREAL1, y_pred)
+
+#set(y_test)
+
+
+
+audioUtils.plot_confusion_matrix(cm_testREAL1, classList)#, normalize=True)
+
+# In[]
+yPredProb= m.predict(X_testREAL1)
+
+y_pred= yPredProb.argmax(axis=1)
+
+cm_testREAL1 = confusion_matrix(y_testREAL1, y_pred)
+
+#set(y_test)
+
+audioUtils.plot_confusion_matrix(cm_testREAL1, classList, 
+                                 title='Confusion matrix: y_testREAL1')#, normalize=True)
+
+
+
+# In[]
+
+yPredProb= m.predict(X_test)
+
+y_pred= yPredProb.argmax(axis=1)
+
+cm_test = confusion_matrix(y_test, y_pred)
+
+#set(y_test)
+
+audioUtils.plot_confusion_matrix(cm_test, classList, 
+                                 title='Confusion matrix: y_test')#, normalize=True)
+
+_= '''
+(cm/cm.sum(axis=0)).max(axis=1).argmax()
+Out[110]: 9+1==10
+
+(cm/cm.sum(axis=1)).max(axis=0).argmax()
+Out[111]: 1+1==2
+'''
+
+# In[]
+
+yPredProb= m.predict(X_val)
+
+y_pred= yPredProb.argmax(axis=1)
+
+cm_val = confusion_matrix(y_val, y_pred)
+
+#set(y_test)
+
+audioUtils.plot_confusion_matrix(cm_test, classList, 
+                                 title='Confusion matrix: y_val')#, normalize=True)
+
+
+# In[]
+
+print('''##########
+a Real-time Test..., 
+press 【Enter】and speak out within 1 sec      
+the words are in the list of 35 words: 
+
+###################
+{}
+###################
+
+PS: (you cannot say '_silence_', 
+it just for "silence" 
+or "no sound" 
+or "background noise") 
+'''.format(classList))
+
+
     
 T=  1     # Duration of recording
 fs= 16000  # Sample rate
@@ -461,127 +754,6 @@ fn='rySp.gz'
 cpk.dump(xL, fn)
 xL= cpk.load(fn)
 
-
-# In[]
-    
-#import numpy as np
-#from tensorflow.keras.models import load_model
-import sounddevice as sd
-
-import pylab as pl 
-from tqdm import tqdm
-
-n= 0
-nWrong= 0 
-wrongL= []
-
-infoL= []
-  
-for x, yI in tqdm(zip(x_testREAL0, y_testREAL0)): #xL[0:10]:
-    #x= x_testREAL[i]
-    
-    yAns= labels[yI]
-    
-    x= x.astype(np.float32)
-    
-    #sd.play(x, samplerate= 16000)
-        
-    y, X= recWav(x, featureOut=True)
-    
-    #info= 'n= {:05d}, nWrong= {:05d}, y=【{}】, yAns= [{}]'.format(
-    #        n, nWrong, y, yAns)
-    #print(info)
-    
-    
-    if y != yAns:
-        nWrong += 1
-        wrongL += [n]
-        
-        info= '''n= {:05d}, nWrong= {:05d}, wer= {:.5f}, y=【{}】, yAns= [{}]'''.format(
-                 n, nWrong, nWrong/(n+1), y, yAns)
-        print(info)
-        
-        infoL += [info]
-        
-        
-        '''
-        sd.play(x, samplerate= 16000)
-        
-        pl.subplot(2,1,1)
-        
-        pl.title(info)
-
-        pl.imshow(X.transpose(), origin='low')
-        
-        pl.subplot(2,1,2)
-        pl.plot(x)
-        pl.grid('on')
-        pl.show()
-            
-        sd.wait()
-        '''
-    
-    n += 1
-    #break
-
-np.save('infoL_testREAL.npy', np.array(infoL))
-
-_='''
-3966it [02:26, 27.78it/s]n= 03968, nWrong= 00433, wer= 0.10910, y=【two】, yAns= [yes]
-4074it [02:30, 27.14it/s]
-
-433/4074
-Out[24]: 0.10628375061364752  <--wer for x_testREAL1
-
-'''
-
-_='''
-405it [00:17, 17.49it/s]n= 00405, nWrong= 00119, wer= 0.29310, y=【zero】, yAns= [_silence_]
-n= 00406, nWrong= 00120, wer= 0.29484, y=【six】, yAns= [_silence_]
-
-【408】it [00:17, 19.53it/s]n= 00408, nWrong= 00121, 【wer= 0.29584】, y=【backward】, yAns= [_silence_]
- <-- wer for x_testREAL0 其中 408 個 真正 的 silence
- 
-#-----
-
-n= 00815, nWrong= 00528, wer= 0.64706, y=【zero】, yAns= [_silence_]
-816it [00:33, 24.65it/s]
-
-528/816
-Out[26]: 0.6470588235294118
-
-(528-408)/(816-408)
-Out[27]: 0.29411764705882354  <-- wer for x_testREAL0 其中 408 個 真正 的 silence
-
-'''
-
-# In[]
-
-infoL= np.load('infoL_testREAL.npy')
-wrongL= [int(infoL[i].split()[1].strip(',')) for i in range(infoL.size)]
-
-for info in infoL[::-1]:
-    
-    i= int(info.split()[1].strip(','))
-    x= x_testREAL[i]
-    
-    x= x.astype(np.float32)
-    
-    sd.play(x, samplerate= 16000)
-        
-
-    print(info)
-            
-    pl.title(info)
-
-    pl.plot(x)
-    pl.grid('on')
-    pl.show()
-        
-    sd.wait()
-
-    
-    
 # In[]
     
 print('... ry: Good Luck ...')
