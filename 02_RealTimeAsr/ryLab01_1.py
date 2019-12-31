@@ -198,8 +198,11 @@ LabelDic= {0: '_silence_',
 
 #nCategs= len(LabelDic) #36 
 
-tf.keras.backend.clear_session()  
-NNmodel= load_model('ry_best_model.hdf5')
+tf.keras.backend.clear_session() 
+
+fnModel= 'ry_best_model1.hdf5'
+ 
+NNmodel= load_model(fnModel)
 
 if __name__=='__main__':
     timeDuration= 10 #sec
