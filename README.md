@@ -1,10 +1,4 @@
-# ry-Speech-commands
-## to run it, just 
-jump into
-00_
-01_
-02_
-execute a main program step by step ...
+# ryAsr2019.ipynb
 
 
 ### major reference:
