@@ -31,6 +31,10 @@ https://arxiv.org/abs/1911.02086
 5. End-to-End Speech Recognition From the Raw Waveform
 https://arxiv.org/abs/1806.07098
 
+6. refresh python skills 
+https://gitpitch.com/pyconjp/slides/master?p=osc2019fukuoka#/
+
+
 
 
 
