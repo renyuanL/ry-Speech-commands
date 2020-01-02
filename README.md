@@ -1,5 +1,8 @@
 # ryAsr2020.ipynb
 
+a YouTube Demo:
+https://youtu.be/iksu0f2wz-8
+
 
 ### major reference:
 
