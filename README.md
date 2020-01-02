@@ -3,9 +3,6 @@
 a YouTube Demo:
 https://youtu.be/iksu0f2wz-8
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/iksu0f2wz-8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
 ### major reference:
 
 0. Speech Commands: A Dataset for Limited-Vocabulary Speech Recognition
