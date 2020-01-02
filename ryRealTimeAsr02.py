@@ -1,3 +1,9 @@
+'''
+
+ryRealTimeAsr02.py
+
+'''
+
 import sounddevice as sd
 import numpy as np
 
@@ -36,7 +42,8 @@ import time
 
 import pylab as pl
 
-import ryLab01_1 as ry
+#import ryLab01_1 as ry
+import ryRecog03 as ry
 
 
 def ryOpenStream(aCallback):
