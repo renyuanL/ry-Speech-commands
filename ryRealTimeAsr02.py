@@ -102,7 +102,9 @@ with ryOpenStream(ryCallback) as ryStream:
     nReallyStop= 10
     
     #while t<spDuration:
-    for i in tqdm(range(loopNumber)):    
+    #for i in range(loopNumber):
+    print('\n.... Listen forever ....\n')
+    while True:
         
         t00= time.time()
         
@@ -110,25 +112,25 @@ with ryOpenStream(ryCallback) as ryStream:
         
         if prob > recProbToConfirm: #0.8:
             
-            info= '【{}】@({:.1f})'.format(y, t)
-            print(info, end='', flush=True)
+            info= f'【{y}】    @time=({t:.1f})'
+            print(info, end='\n', flush=True)
         
             if y== 'stop':
                 nStop+= 1
                 
-                info= '【【{}】】({}, Really？)'.format(y, nStop)
+                info= f'【【{y}】】({nStop}, Really？)'
                 print(info, end='\n', flush=True)
                 
                 if nStop >= nReallyStop:
                     
-                    info= '【{}】(OK, I will STOP！！！)'.format(y)
+                    info= f'【【{y}】】(OK, I will STOP！！！)'
                     print(info, end='\n', flush=True)
                     break
             
             if y== 'go':
                 nStop= 0
                 
-                info= '【【{}】】(OK, Reset nStop= {}, and then GO)！！！'.format(y, nStop)
+                info= f'【【{y}】】(OK, Reset nStop= {nStop}, and then GO)！！！'
                 print(info, end='\n', flush=True)
         
         dt00= time.time()-t00
