@@ -3,6 +3,12 @@
 a YouTube Demo:
 https://youtu.be/iksu0f2wz-8
 
+## Real-time test Model & Program:
+ryRecog03.py
+ryRealTimeAsr02.py
+ryModel.hdf5
+
+
 ### major reference:
 
 0. Speech Commands: A Dataset for Limited-Vocabulary Speech Recognition
