@@ -225,7 +225,8 @@ tf.keras.backend.clear_session()
 
 #fnModel= 'ry_best_model1.hdf5'
 
-fnModel= 'ryModel.hdf5'
+basePath= '../ryData/'
+fnModel= basePath+'ryModel.hdf5'
  
 NNmodel= load_model(fnModel)
 
