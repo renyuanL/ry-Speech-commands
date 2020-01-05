@@ -154,129 +154,142 @@ class Chimp(pygame.sprite.Sprite):
             self.original= self.image
 
 
-#def main():
-"""this function is called when the program starts.
-   it initializes everything it needs, then runs in
-   a loop until the function returns."""
-# Initialize Everything
-pygame.init()
-screen= pygame.display.set_mode((500, 50))
-
-pygame.display.set_caption('PummelTheChimp,AndWin$$$(揍人猿，贏獎金)')
-pygame.mouse.set_visible(0)
-
-# Create The Backgound
-background= pygame.Surface(screen.get_size())
-background= background.convert()
-background.fill((250, 250, 250))
-
-# Put Text On The Background, Centered
-if pygame.font:
+def main():
+    """this function is called when the program starts.
+       it initializes everything it needs, then runs in
+       a loop until the function returns."""
+    # Initialize Everything
+    pygame.init()
+    screen= pygame.display.set_mode((500, 50))
     
-    #font= pygame.font.SysFont(None, 36)
-    font= pygame.font.SysFont('microsoftjhengheimicrosoftjhengheiui',12)
+    pygame.display.set_caption('PummelTheChimp (揍人猿)')
+    pygame.mouse.set_visible(0)
+    
+    # Create The Backgound
+    background= pygame.Surface(screen.get_size())
+    background= background.convert()
+    background.fill((250, 250, 250))
+    
+    # Put Text On The Background, Centered
+    if pygame.font:
+        
+        #font= pygame.font.SysFont(None, 36)
+        font= pygame.font.SysFont('microsoftjhengheimicrosoftjhengheiui',12)
+        
+        '''
+        pygame.font.get_fonts()
+        Out[23]: 
+        ['arial',
+         'arialblack',
+         'bahnschrift',
+         'calibri',
+         'cambriacambriamath',
+         ....
+         (慢慢找到一個..."microsoftjhengheimicrosoftjhengheiui")
+         猜它是【微軟正黑體】
+        '''
+        
+        text= font.render("揍人猿！", 1, (10, 10, 10))
+        textpos= text.get_rect(centerx= background.get_width()/2)
+        background.blit(text, textpos)
+    
+    
+    # Display The Background
+    screen.blit(background, (0, 0))
     
     '''
-    pygame.font.get_fonts()
-    Out[23]: 
-    ['arial',
-     'arialblack',
-     'bahnschrift',
-     'calibri',
-     'cambriacambriamath',
-     ....
-     (慢慢找到一個..."microsoftjhengheimicrosoftjhengheiui")
-     猜它是【微軟正黑體】
+    blit (plural blits)
+    
+    (computing) A logical operation 
+    in which a block of data is rapidly moved or copied in memory, 
+    most commonly used to animate two-dimensional graphics.
     '''
     
-    text= font.render("PummelTheChimp,AndWin$$$(揍人猿，贏獎金)", 1, (10, 10, 10))
-    textpos= text.get_rect(centerx= background.get_width()/2)
-    background.blit(text, textpos)
-
-
-# Display The Background
-screen.blit(background, (0, 0))
-
-'''
-blit (plural blits)
-
-(computing) A logical operation 
-in which a block of data is rapidly moved or copied in memory, 
-most commonly used to animate two-dimensional graphics.
-'''
-
-pygame.display.flip()
-
-'''
-flip: 本意為翻轉
-在此為...
-Update the full display Surface to the screen
-'''
-
-# Prepare Game Objects
-clock= pygame.time.Clock()
-whiff_sound= load_sound('whiff.wav')
-punch_sound= load_sound('punch.wav')
-
-chimp= Chimp()
-fist=  Fist()
-
-allsprites= pygame.sprite.RenderPlain((fist, chimp))
-
-allsprites.update()
-
-# Draw Everything
-screen.blit(background, (0, 0))
-allsprites.draw(screen)
-pygame.display.flip()
-
-# Main Loop
-#'''
-going= True
-while going:
+    pygame.display.flip()
     
-    dt= clock.tick(10)  
-    # at most 60 calls/sec of clock.tick(60) is allowed
-    # dt is the time after the last call of clock.tick()
-
-    # Handle Input Events
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            going= False
-        elif event.type == KEYDOWN and event.key == K_ESCAPE:
-            going= False
-        elif event.type == MOUSEBUTTONDOWN:
-            if fist.punch(chimp):
-                punch_sound.play()  # punch
-                chimp.punched()
-            else:
-                whiff_sound.play()  # miss
-        elif event.type == MOUSEBUTTONUP:
-            fist.unpunch()
-                       
-    # Handle Speech Recognition
-    y, prob= ryGet1secSpeechAndRecogItWithProb()
-    if y in ['yes','go','marvin'] and prob>.8:
-        punch_sound.play()
-        chimp.punched()
-        
-        
-        
+    '''
+    flip: 本意為翻轉
+    在此為...
+    Update the full display Surface to the screen
+    '''
+    
+    # Prepare Game Objects
+    clock= pygame.time.Clock()
+    whiff_sound= load_sound('whiff.wav')
+    punch_sound= load_sound('punch.wav')
+    
+    chimp= Chimp()
+    fist=  Fist()
+    
+    allsprites= pygame.sprite.RenderPlain((fist, chimp))
+    
     allsprites.update()
-
+    
     # Draw Everything
     screen.blit(background, (0, 0))
     allsprites.draw(screen)
     pygame.display.flip()
-#'''
-pygame.quit()
+    
+    # Main Loop
+    #'''
+    going= True
+    while going:
+        
+        dt= clock.tick(10)  
+        # at most 60 calls/sec of clock.tick(60) is allowed
+        # dt is the time after the last call of clock.tick()
+    
+        # Handle Input Events
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                going= False
+            elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                going= False
+            elif event.type == MOUSEBUTTONDOWN:
+                if fist.punch(chimp):
+                    punch_sound.play()  # punch
+                    chimp.punched()
+                else:
+                    whiff_sound.play()  # miss
+            elif event.type == MOUSEBUTTONUP:
+                fist.unpunch()
+                           
+        # Handle Speech Recognition
+        y, prob= ryGet1secSpeechAndRecogItWithProb()
 
-asrStream.stop()
-asrStream.close()
+        if prob>.9:
+            background.fill((250, 250, 250))            
+            text= font.render(f"【{y}】", 1, (10, 10, 10))
+            textpos= text.get_rect(centerx= background.get_width()/2)
+            background.blit(text, textpos)
+            screen.blit(background, (0, 0))
+        
+        if y in ['yes','go','marvin'] and prob>.9:
+            punch_sound.play()
+            chimp.punched()
+        
+
+            
+            
+        allsprites.update()
+    
+        # Draw Everything
+        screen.blit(background, (0, 0))
+        allsprites.draw(screen)
+        
+
+            
+        pygame.display.flip()
+    #'''
+    pygame.quit()
+    
+    asrStream.stop()
+    asrStream.close()
 
 
 # In[]
 
 # In[]
+main()
 
 print('ry: 明けましておめでとう Happy New Year, 2020 !!!')
