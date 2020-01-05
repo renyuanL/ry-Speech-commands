@@ -4,10 +4,11 @@ a YouTube Demo:
 https://youtu.be/iksu0f2wz-8
 
 ## Real-time test Model & Program:
-- ryRecog03.py             ... run in fixed time duration recording speech
-- ryRealTimeAsr03.py       ... run in text mode
-- ryRealTimeAsr03_pgABC.py ... run with pygame in graphic mode
-- ryModel.hdf5             ... the Asr Model (CNN)
+- ryRecog03.py                     ... run in fixed time duration recording speech
+- ryRealTimeAsr03.py               ... run in text mode
+- ryRealTimeAsr03_pgABC.py         ... run with pygame in graphic mode
+- ryRealTimeAsr03_spaceInvader.py  ... adapt a tutorial pygame program to have asr capability
+- ryModel.hdf5                     ... the Asr Model (CNN)
 
 
 ### major reference:
