@@ -1,7 +1,11 @@
 # ryAsr2020.ipynb
 
-a YouTube Demo:
+YouTube Demos:
+
 https://youtu.be/iksu0f2wz-8
+
+https://youtu.be/xoiVhOgdpU0
+
 
 ## Real-time test Model & Program:
 - ryRecog03.py                     ... run in fixed time duration recording speech
